@@ -1,4 +1,4 @@
-package com.arise.arise_app
+package com.example.arise_app
 
 import io.flutter.embedding.android.FlutterActivity
 
