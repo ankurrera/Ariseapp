@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/user_profile.dart';
 
@@ -111,6 +112,6 @@ class ProfileService {
 
   int _calculateXpForLevel(int level) {
     // Formula: 100 * level^1.5
-    return (100 * (level * level * level).toDouble()).round();
+    return (100 * math.pow(level, 1.5)).round();
   }
 }

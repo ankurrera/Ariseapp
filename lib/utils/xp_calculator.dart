@@ -1,9 +1,11 @@
+import 'dart:math' as math;
+
 class XpCalculator {
   /// Calculate XP required for next level using exponential formula
   static int xpForLevel(int level) {
     // Formula: baseXP * (level ^ 1.5)
     const baseXp = 100;
-    return (baseXp * (level * level * level).toDouble().pow(0.5)).round();
+    return (baseXp * math.pow(level, 1.5)).round();
   }
 
   /// Calculate total XP needed to reach a specific level
@@ -71,11 +73,5 @@ class XpCalculator {
     int durationBonus = (durationMinutes / 2).floor();
     
     return baseXp + durationBonus;
-  }
-}
-
-extension on double {
-  double pow(double exponent) {
-    return this * exponent; // Simplified for demonstration
   }
 }
