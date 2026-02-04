@@ -123,7 +123,8 @@ class SoloLevelingTheme {
       ),
       
       // Card theme
-      cardTheme: CardTheme(
+      // Card theme
+      cardTheme: CardThemeData(
         color: darkPanel,
         elevation: 0,
         shape: RoundedRectangleBorder(
@@ -134,7 +135,6 @@ class SoloLevelingTheme {
           ),
         ),
       ),
-      
       // Input decoration theme
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
