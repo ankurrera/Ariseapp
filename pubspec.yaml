@@ -1,0 +1,44 @@
+name: arise_app
+description: Flutter-based Android app converted from Solo-Leveling web application
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # State Management
+  flutter_riverpod: ^2.4.9
+  
+  # Navigation
+  go_router: ^13.0.1
+  
+  # Backend & Auth
+  supabase_flutter: ^2.3.4
+  
+  # UI Components
+  fl_chart: ^0.66.2
+  table_calendar: ^3.0.9
+  flutter_svg: ^2.0.9
+  google_fonts: ^6.1.0
+  shimmer: ^3.0.0
+  
+  # Utilities
+  intl: ^0.18.1
+  equatable: ^2.0.5
+  uuid: ^4.3.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+
+flutter:
+  uses-material-design: true
+  
+  assets:
+    - assets/images/
+    - assets/icons/
