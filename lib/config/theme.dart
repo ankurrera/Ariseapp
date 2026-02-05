@@ -78,7 +78,8 @@ class SoloLevelingTheme {
       ),
 
       // Card Theme
-      cardTheme: CardTheme(
+      // FIXED: Using CardThemeData instead of CardTheme to match environment types
+      cardTheme: CardThemeData(
         color: surface,
         elevation: 0,
         margin: EdgeInsets.zero,

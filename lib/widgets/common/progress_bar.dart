@@ -14,7 +14,7 @@ class CustomProgressBar extends StatelessWidget {
     required this.progress,
     this.height = 8,
     this.segments = 10,
-    this.showGlow = true,
+    this.showGlow = false, // Default false for flat theme
     this.fillColor,
     this.backgroundColor,
   });
@@ -33,30 +33,22 @@ class CustomProgressBar extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 1),
             decoration: BoxDecoration(
               color: isFilled || isPartiallyFilled
-                  ? fillColor ?? SoloLevelingTheme.primaryBlue
-                  : backgroundColor ?? SoloLevelingTheme.darkPanelBorder,
-              borderRadius: BorderRadius.circular(2),
-              boxShadow: showGlow && (isFilled || isPartiallyFilled)
-                  ? [
-                      BoxShadow(
-                        color: (fillColor ?? SoloLevelingTheme.glowBlue)
-                            .withOpacity(0.5),
-                        blurRadius: 4,
-                      ),
-                    ]
-                  : null,
+                  ? fillColor ?? SoloLevelingTheme.primary
+                  : backgroundColor ?? SoloLevelingTheme.border,
+              borderRadius: BorderRadius.circular(1), // Sharper corners for system look
+              // Glow removed for flat design parity
             ),
             child: isPartiallyFilled
                 ? FractionallySizedBox(
-                    alignment: Alignment.centerLeft,
-                    widthFactor: segmentProgress,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: fillColor ?? SoloLevelingTheme.primaryBlue,
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                  )
+              alignment: Alignment.centerLeft,
+              widthFactor: segmentProgress,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: fillColor ?? SoloLevelingTheme.primary,
+                  borderRadius: BorderRadius.circular(1),
+                ),
+              ),
+            )
                 : null,
           ),
         );

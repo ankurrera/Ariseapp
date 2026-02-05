@@ -26,7 +26,7 @@ class CornerDecoration extends StatelessWidget {
       size: Size(size, size),
       painter: _CornerPainter(
         corner: corner,
-        color: color ?? SoloLevelingTheme.glowBlue,
+        color: color ?? SoloLevelingTheme.border,
       ),
     );
   }
@@ -45,7 +45,7 @@ class _CornerPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = color
-      ..strokeWidth = 2
+      ..strokeWidth = 1 // Thinner lines for new theme
       ..style = PaintingStyle.stroke;
 
     final path = Path();

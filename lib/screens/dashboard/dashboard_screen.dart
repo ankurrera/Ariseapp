@@ -6,7 +6,6 @@ import '../../providers/auth_provider.dart';
 import '../../widgets/dashboard/system_header.dart';
 import '../../widgets/dashboard/player_status_panel.dart';
 import '../../widgets/dashboard/radar_chart.dart';
-// Import other panels as you create them
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -18,7 +17,7 @@ class DashboardScreen extends ConsumerWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // Background Effect (Subtle Gradient)
+          // Background Effect
           Positioned.fill(
             child: Container(
               decoration: const BoxDecoration(
@@ -26,7 +25,7 @@ class DashboardScreen extends ConsumerWidget {
                   center: Alignment(0, -0.8),
                   radius: 1.5,
                   colors: [
-                    Color(0xFF252525), // Slight lighter top
+                    Color(0xFF252525),
                     SoloLevelingTheme.background,
                   ],
                 ),
@@ -53,7 +52,7 @@ class DashboardScreen extends ConsumerWidget {
                       const SystemHeader(),
                       const SizedBox(height: 24),
 
-                      // Workout Action Button (Placeholder for now)
+                      // Workout Action Button
                       Center(
                         child: ElevatedButton.icon(
                           onPressed: () {},
@@ -75,19 +74,13 @@ class DashboardScreen extends ConsumerWidget {
                       ),
                       const SizedBox(height: 32),
 
-                      // Layout: Responsive Grid
-                      // On mobile, this will be a column.
-                      const PlayerStatusPanel(),
+                      // Panels
+                      // FIXED: Passed the required 'profile' argument here
+                      PlayerStatusPanel(profile: profile),
                       const SizedBox(height: 16),
 
                       const RadarChart(),
                       const SizedBox(height: 16),
-
-                      // Placeholders for other panels
-                      // const SkillPointsPanel(),
-                      // const SizedBox(height: 16),
-                      // const CalendarPanel(),
-
                     ],
                   ),
                 );
@@ -97,7 +90,7 @@ class DashboardScreen extends ConsumerWidget {
 
           // Top Right Actions
           Positioned(
-            top: 40, // Adjust for SafeArea
+            top: 40,
             right: 16,
             child: Row(
               children: [

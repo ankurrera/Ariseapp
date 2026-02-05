@@ -21,10 +21,14 @@ class GlowText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // New design is flat/monochrome, so "Glow" is represented by high contrast
     return Text(
       text,
-      style: SoloLevelingTheme.glowText(fontSize, fontWeight: fontWeight).copyWith(
-        color: color,
+      style: SoloLevelingTheme.systemFont.copyWith(
+        fontSize: fontSize,
+        fontWeight: fontWeight ?? FontWeight.normal,
+        color: color ?? SoloLevelingTheme.primary,
+        // Removed shadows for flat design parity
       ),
       textAlign: textAlign,
       maxLines: maxLines,
