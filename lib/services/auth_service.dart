@@ -44,9 +44,12 @@ class AuthService {
 
     // If profile doesn't exist, create one
     if (response == null) {
+      if (user.email == null || user.email!.isEmpty) {
+        throw Exception('User email is required to create a profile');
+      }
       return await createUserProfile(
         userId: user.id,
-        email: user.email ?? '',
+        email: user.email!,
       );
     }
 
