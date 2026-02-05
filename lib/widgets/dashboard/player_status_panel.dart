@@ -133,9 +133,10 @@ class PlayerStatusPanel extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 4),
+            // FIXED: Used Theme.of(context) instead of SoloLevelingTheme.bodyLarge
             Text(
               "$healthPercent%",
-              style: SoloLevelingTheme.bodyLarge.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
           ],
         ),

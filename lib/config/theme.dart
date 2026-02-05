@@ -3,10 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 class SoloLevelingTheme {
   // Colors derived from index.css (Dark Mode - True Dark Grayscale)
-  static const Color background = Color(0xFF0A0A0A); // Slightly darker to match web
-  static const Color surface = Color(0xFF171717);    // Web 'muted' equivalent
-  static const Color primary = Color(0xFFE6E6E6);    // Web 'foreground'
-  static const Color accent = Color(0xFF404040);     // Web 'accent'
+  static const Color background = Color(0xFF0A0A0A);
+  static const Color surface = Color(0xFF171717);
+  static const Color primary = Color(0xFFE6E6E6);
+  static const Color accent = Color(0xFF404040);
 
   static const Color muted = Color(0xFF262626);
   static const Color mutedForeground = Color(0xFFA3A3A3);
@@ -35,8 +35,9 @@ class SoloLevelingTheme {
         bodyLarge: systemFont.copyWith(fontSize: 16, color: primary),
         bodyMedium: systemFont.copyWith(fontSize: 14, color: mutedForeground),
       ),
-      cardTheme: CardTheme(
-        color: background, // React uses 'notion-card' which usually implies bg-background with border
+      // FIXED: Using CardThemeData instead of CardTheme for Flutter 3.27+
+      cardTheme: CardThemeData(
+        color: surface,
         elevation: 0,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
