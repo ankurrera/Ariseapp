@@ -40,7 +40,15 @@ class AuthService {
         .from('profiles')
         .select()
         .eq('id', user.id)
-        .single();
+        .maybeSingle();
+
+    // If profile doesn't exist, create one
+    if (response == null) {
+      return await createUserProfile(
+        userId: user.id,
+        email: user.email ?? '',
+      );
+    }
 
     return UserProfile.fromJson(response);
   }
