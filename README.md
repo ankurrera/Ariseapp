@@ -52,6 +52,17 @@ flutter run --dart-define=SUPABASE_URL=your-url --dart-define=SUPABASE_ANON_KEY=
 flutter run
 ```
 
+**Note:** If you see configuration warnings or 400 errors, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for detailed guidance.
+
+## Troubleshooting
+
+If you encounter issues:
+- **400 Bad Request errors**: See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for comprehensive debugging guide
+- **Setup issues**: See [SETUP.md](SETUP.md) for detailed installation instructions
+- **General questions**: Check existing [GitHub Issues](https://github.com/ankurrera/Ariseapp/issues)
+
+The app includes detailed debug logging to help identify issues. Check your console output for helpful messages with emoji indicators (🔐, 📋, ✓, ✗, ⚠️).
+
 ## Project Structure
 ```
 lib/
