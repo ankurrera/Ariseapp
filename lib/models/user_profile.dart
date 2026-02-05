@@ -2,15 +2,15 @@ import 'package:equatable/equatable.dart';
 
 class UserProfile extends Equatable {
   final String id;
-  final String email;
+  final String email; // Kept in memory, but not saved to 'profiles' DB table
   final String? displayName;
   final String? avatarUrl;
-  final String playerClass; // Warrior, Assassin, Mage
+  final String playerClass;
   final int level;
   final int currentXp;
-  final int xpToNextLevel;
-  final int skillPoints;
-  final Map<String, int> stats; // strength, agility, intelligence, etc.
+  final int xpToNextLevel; // Calculated field, not saved to DB
+  final int skillPoints;   // Calculated field, not saved to DB
+  final Map<String, int> stats; // Calculated field, not saved to DB
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -22,8 +22,8 @@ class UserProfile extends Equatable {
     this.playerClass = 'Warrior',
     this.level = 1,
     this.currentXp = 0,
-    this.xpToNextLevel = 100,
-    this.skillPoints = 0,
+    this.xpToNextLevel = 100, // Default for now
+    this.skillPoints = 0,     // Default for now
     this.stats = const {
       'strength': 10,
       'agility': 10,
@@ -38,23 +38,25 @@ class UserProfile extends Equatable {
   factory UserProfile.fromJson(Map<String, dynamic> json) {
     return UserProfile(
       id: json['id'] as String,
-      email: json['email'] as String,
+      // Email is usually not in the 'profiles' table, so we handle null safety
+      email: (json['email'] as String?) ?? '',
       displayName: json['display_name'] as String?,
       avatarUrl: json['avatar_url'] as String?,
       playerClass: json['player_class'] as String? ?? 'Warrior',
       level: json['level'] as int? ?? 1,
-      currentXp: json['current_xp'] as int? ?? 0,
-      xpToNextLevel: json['xp_to_next_level'] as int? ?? 100,
-      skillPoints: json['skill_points'] as int? ?? 0,
-      stats: json['stats'] != null
-          ? Map<String, int>.from(json['stats'] as Map)
-          : const {
-              'strength': 10,
-              'agility': 10,
-              'intelligence': 10,
-              'vitality': 10,
-              'sense': 10,
-            },
+      currentXp: (json['xp'] as num?)?.toInt() ?? 0,
+
+      // These fields are not in the DB, so we use defaults or calculate them
+      xpToNextLevel: 100 + ((json['level'] as int? ?? 1) * 50),
+      skillPoints: 0,
+      stats: const {
+        'strength': 10,
+        'agility': 10,
+        'intelligence': 10,
+        'vitality': 10,
+        'sense': 10,
+      },
+
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
     );
@@ -62,16 +64,15 @@ class UserProfile extends Equatable {
 
   Map<String, dynamic> toJson() {
     return {
+      // FIXED: Send 'id' as BOTH the primary key AND the foreign key 'user_id'
       'id': id,
-      'email': email,
+      'user_id': id, // <--- This line fixes the "null value in column user_id" error
+
       'display_name': displayName,
       'avatar_url': avatarUrl,
       'player_class': playerClass,
       'level': level,
-      'current_xp': currentXp,
-      'xp_to_next_level': xpToNextLevel,
-      'skill_points': skillPoints,
-      'stats': stats,
+      'xp': currentXp,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
     };
@@ -109,17 +110,17 @@ class UserProfile extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        email,
-        displayName,
-        avatarUrl,
-        playerClass,
-        level,
-        currentXp,
-        xpToNextLevel,
-        skillPoints,
-        stats,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    email,
+    displayName,
+    avatarUrl,
+    playerClass,
+    level,
+    currentXp,
+    xpToNextLevel,
+    skillPoints,
+    stats,
+    createdAt,
+    updatedAt,
+  ];
 }

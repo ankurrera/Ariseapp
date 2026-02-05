@@ -64,10 +64,11 @@ class AuthService {
     }
 
     try {
+      // FIXED: Query by 'user_id' instead of 'id' to find profiles created by the Web App
       final response = await _supabase
           .from('profiles')
           .select()
-          .eq('id', user.id)
+          .eq('user_id', user.id)
           .maybeSingle();
 
       if (response == null) {
@@ -83,6 +84,17 @@ class AuthService {
       return UserProfile.fromJson(response);
     } catch (e) {
       debugPrint('✗ Failed to get user profile: $e');
+      // If we caught the duplicate error here during a race condition, try fetching again
+      if (e.toString().contains('23505')) {
+        final retryResponse = await _supabase
+            .from('profiles')
+            .select()
+            .eq('user_id', user.id)
+            .maybeSingle();
+        if (retryResponse != null) {
+          return UserProfile.fromJson(retryResponse);
+        }
+      }
       rethrow;
     }
   }
@@ -102,9 +114,20 @@ class AuthService {
         updatedAt: now,
       );
 
+      // We don't need the return value of insert since we have the object
       await _supabase.from('profiles').insert(profile.toJson());
       return profile;
     } catch (e) {
+      // If profile was created by a trigger or another client concurrently
+      if (e.toString().contains('23505')) {
+        debugPrint('⚠️ Profile already exists (duplicate key), fetching existing...');
+        final existing = await _supabase
+            .from('profiles')
+            .select()
+            .eq('user_id', userId)
+            .single();
+        return UserProfile.fromJson(existing);
+      }
       debugPrint('✗ Failed to create user profile: $e');
       rethrow;
     }
