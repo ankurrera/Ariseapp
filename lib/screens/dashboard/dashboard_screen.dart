@@ -3,9 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../config/theme.dart';
 import '../../providers/auth_provider.dart';
+import '../../widgets/common/corner_decoration.dart';
 import '../../widgets/dashboard/system_header.dart';
 import '../../widgets/dashboard/player_status_panel.dart';
 import '../../widgets/dashboard/radar_chart.dart';
+// Import placeholders
+import '../../widgets/dashboard/skill_points_panel.dart';
+import '../../widgets/dashboard/calendar_panel.dart';
+import '../../widgets/dashboard/goal_panel.dart';
+import '../../widgets/dashboard/session_history.dart';
+import '../../widgets/dashboard/potions_panel.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -17,98 +24,105 @@ class DashboardScreen extends ConsumerWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // Background Effect
+          // 1. Background Gradient (Top Ellipse)
           Positioned.fill(
             child: Container(
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 gradient: RadialGradient(
-                  center: Alignment(0, -0.8),
-                  radius: 1.5,
+                  center: Alignment.topCenter,
+                  radius: 1.0,
                   colors: [
-                    Color(0xFF252525),
+                    SoloLevelingTheme.primary.withOpacity(0.05),
                     SoloLevelingTheme.background,
                   ],
+                  stops: const [0.0, 0.6],
                 ),
               ),
             ),
           ),
 
-          // Main Content
+          // 2. Corner Decorations (Screen Edges)
+          const Positioned(top: 16, left: 16, child: CornerDecoration(corner: Corner.topLeft)),
+          const Positioned(top: 16, right: 16, child: CornerDecoration(corner: Corner.topRight)),
+          const Positioned(bottom: 16, left: 16, child: CornerDecoration(corner: Corner.bottomLeft)),
+          const Positioned(bottom: 16, right: 16, child: CornerDecoration(corner: Corner.bottomRight)),
+
+          // 3. Main Content
           SafeArea(
-            child: userProfileAsync.when(
-              loading: () => const Center(
-                child: CircularProgressIndicator(color: SoloLevelingTheme.primary),
-              ),
-              error: (err, stack) => Center(child: Text('Error loading profile: $err')),
-              data: (profile) {
-                if (profile == null) return const Center(child: Text('No Profile Found'));
-
-                return SingleChildScrollView(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+              child: Column(
+                children: [
+                  // Top Actions Row
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      // Header
-                      const SystemHeader(),
-                      const SizedBox(height: 24),
-
-                      // Workout Action Button
-                      Center(
-                        child: ElevatedButton.icon(
-                          onPressed: () {},
-                          icon: const Icon(Icons.fitness_center),
-                          label: const Text('INITIATE WORKOUT'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: SoloLevelingTheme.surface,
-                            foregroundColor: SoloLevelingTheme.primary,
-                            elevation: 0,
-                            side: const BorderSide(color: SoloLevelingTheme.border),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                            textStyle: SoloLevelingTheme.systemFont.copyWith(
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1.5,
-                            ),
-                            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 32),
-
-                      // Panels
-                      // FIXED: Passed the required 'profile' argument here
-                      PlayerStatusPanel(profile: profile),
-                      const SizedBox(height: 16),
-
-                      const RadarChart(),
-                      const SizedBox(height: 16),
+                      _TopIconButton(icon: Icons.fitness_center, onTap: () => context.push('/routines')),
+                      const SizedBox(width: 8),
+                      _TopIconButton(icon: Icons.settings, onTap: () => context.push('/profile')),
+                      const SizedBox(width: 8),
+                      _TopIconButton(icon: Icons.menu, onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Menu feature coming soon")),
+                        );
+                      }),
                     ],
                   ),
-                );
-              },
-            ),
-          ),
 
-          // Top Right Actions
-          Positioned(
-            top: 40,
-            right: 16,
-            child: Row(
-              children: [
-                _HeaderActionButton(
-                  icon: Icons.fitness_center,
-                  onTap: () => context.push('/routines'),
-                ),
-                const SizedBox(width: 8),
-                _HeaderActionButton(
-                  icon: Icons.settings,
-                  onTap: () => context.push('/profile'),
-                ),
-                const SizedBox(width: 8),
-                _HeaderActionButton(
-                  icon: Icons.logout,
-                  onTap: () => ref.read(authNotifierProvider.notifier).signOut(),
-                ),
-              ],
+                  // Header
+                  const SystemHeader(),
+                  const SizedBox(height: 16),
+
+                  // Workout Button
+                  ElevatedButton(
+                    onPressed: () {}, // TODO: Open Session Form
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: SoloLevelingTheme.primary,
+                      foregroundColor: SoloLevelingTheme.background,
+                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                      textStyle: SoloLevelingTheme.systemFont.copyWith(fontWeight: FontWeight.bold),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                    ),
+                    child: const Text("INITIATE WORKOUT"),
+                  ),
+                  const SizedBox(height: 32),
+
+                  // Main Grid (Responsive)
+                  // On Mobile: Vertical Column
+                  // On Tablet/Web: Grid logic would go here (using LayoutBuilder)
+                  userProfileAsync.when(
+                    data: (profile) => Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        if (profile != null) PlayerStatusPanel(profile: profile),
+                        const SizedBox(height: 16),
+                        const RadarChart(),
+                        const SizedBox(height: 16),
+                        const SkillPointsPanel(),
+                        const SizedBox(height: 16),
+                        const Row(
+                          children: [
+                            Expanded(child: CalendarPanel()),
+                            SizedBox(width: 16),
+                            Expanded(child: GoalPanel()),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        const SessionHistory(),
+                        const SizedBox(height: 16),
+                        const PotionsPanel(),
+                      ],
+                    ),
+                    loading: () => const Center(child: CircularProgressIndicator()),
+                    error: (e, _) => Center(child: Text("Error: $e")),
+                  ),
+
+                  // Footer Decoration
+                  const SizedBox(height: 32),
+                  const _FooterDecoration(),
+                  const SizedBox(height: 32),
+                ],
+              ),
             ),
           ),
         ],
@@ -117,25 +131,61 @@ class DashboardScreen extends ConsumerWidget {
   }
 }
 
-class _HeaderActionButton extends StatelessWidget {
+class _TopIconButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
 
-  const _HeaderActionButton({required this.icon, required this.onTap});
+  const _TopIconButton({required this.icon, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(8),
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.transparent),
-        ),
-        child: Icon(icon, color: SoloLevelingTheme.mutedForeground, size: 24),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Icon(icon, size: 24, color: SoloLevelingTheme.mutedForeground),
       ),
+    );
+  }
+}
+
+class _FooterDecoration extends StatelessWidget {
+  const _FooterDecoration();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: 96,
+          height: 1,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.transparent, SoloLevelingTheme.primary.withOpacity(0.5)],
+            ),
+          ),
+        ),
+        Container(
+          width: 8,
+          height: 8,
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          transform: Matrix4.rotationZ(0.785398), // 45 degrees
+          decoration: BoxDecoration(
+            border: Border.all(color: SoloLevelingTheme.primary.withOpacity(0.5)),
+          ),
+        ),
+        Container(
+          width: 96,
+          height: 1,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [SoloLevelingTheme.primary.withOpacity(0.5), Colors.transparent],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
