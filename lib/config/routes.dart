@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,13 +10,33 @@ import '../screens/habits/habits_screen.dart';
 import '../screens/skills/skills_screen.dart';
 import '../screens/routines/routines_screen.dart';
 
+// Helper class to convert Stream to Listenable for GoRouter
+class GoRouterRefreshStream extends ChangeNotifier {
+  GoRouterRefreshStream(Stream<dynamic> stream) {
+    notifyListeners();
+    _subscription = stream.asBroadcastStream().listen(
+          (dynamic _) => notifyListeners(),
+    );
+  }
+
+  late final StreamSubscription<dynamic> _subscription;
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
+}
+
 final routerProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(currentUserProvider);
+  final authService = ref.watch(authServiceProvider);
 
   return GoRouter(
-    initialLocation: '/auth',
+    initialLocation: '/',
+    refreshListenable: GoRouterRefreshStream(authService.authStateChanges),
     redirect: (context, state) {
-      final isAuthenticated = authState.value != null;
+      final session = authService.currentSession;
+      final isAuthenticated = session != null;
       final isAuthRoute = state.matchedLocation == '/auth';
 
       if (!isAuthenticated && !isAuthRoute) {

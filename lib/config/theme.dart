@@ -2,183 +2,104 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SoloLevelingTheme {
-  // Colors inspired by Solo Leveling
-  static const Color primaryBlue = Color(0xFF3B82F6);
-  static const Color primaryPurple = Color(0xFF8B5CF6);
-  static const Color darkBackground = Color(0xFF0A0E27);
-  static const Color darkPanel = Color(0xFF1A1F3A);
-  static const Color darkPanelBorder = Color(0xFF2D3548);
-  static const Color glowBlue = Color(0xFF60A5FA);
-  static const Color glowPurple = Color(0xFFA78BFA);
-  static const Color textPrimary = Color(0xFFE5E7EB);
-  static const Color textSecondary = Color(0xFF9CA3AF);
-  static const Color success = Color(0xFF10B981);
-  static const Color warning = Color(0xFFF59E0B);
-  static const Color error = Color(0xFFEF4444);
-  
-  // Gradients
-  static const LinearGradient primaryGradient = LinearGradient(
-    colors: [primaryBlue, primaryPurple],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-  
-  static const LinearGradient glowGradient = LinearGradient(
-    colors: [glowBlue, glowPurple],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-  
-  // Text Styles with glow effect
-  static TextStyle glowText(double fontSize, {FontWeight? fontWeight}) {
-    return GoogleFonts.rajdhani(
-      fontSize: fontSize,
-      fontWeight: fontWeight ?? FontWeight.bold,
-      color: textPrimary,
-      shadows: [
-        Shadow(
-          color: glowBlue.withOpacity(0.5),
-          blurRadius: 10,
-        ),
-        Shadow(
-          color: glowPurple.withOpacity(0.3),
-          blurRadius: 20,
-        ),
-      ],
-    );
-  }
-  
+  // Colors derived from index.css (Dark Mode - True Dark Grayscale)
+  static const Color background = Color(0xFF1A1A1A); // hsl(0, 0%, 10%)
+  static const Color surface = Color(0xFF212121);    // hsl(0, 0%, 13%)
+  static const Color primary = Color(0xFFE6E6E6);    // hsl(0, 0%, 90%)
+  static const Color secondary = Color(0xFF212121);  // hsl(0, 0%, 13%)
+  static const Color muted = Color(0xFF292929);      // hsl(0, 0%, 16%)
+  static const Color mutedForeground = Color(0xFF8F8F8F); // hsl(0, 0%, 56%)
+  static const Color border = Color(0xFF2E2E2E);     // hsl(0, 0%, 18%)
+  static const Color error = Color(0xFFD93025);      // Standard error red
+
+  // Custom System Colors
+  static const Color systemGlow = Color(0xFFBDBDBD); // hsl(0, 0%, 74%)
+  static const Color systemAccent = Color(0xFFBDBDBD);
+  static const Color systemBarBg = Color(0xFF292929);
+  static const Color systemBarFill = Color(0xFFBDBDBD);
+
+  // Text Styles
+  static TextStyle get gothicFont => GoogleFonts.cinzel();
+  static TextStyle get systemFont => GoogleFonts.rajdhani();
+
   static ThemeData get darkTheme {
     return ThemeData(
+      useMaterial3: true,
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: darkBackground,
-      primaryColor: primaryBlue,
-      
-      // Color scheme
+      scaffoldBackgroundColor: background,
+      primaryColor: primary,
+
+      // Color Scheme
       colorScheme: const ColorScheme.dark(
-        primary: primaryBlue,
-        secondary: primaryPurple,
-        surface: darkPanel,
-        background: darkBackground,
+        primary: primary,
+        secondary: secondary,
+        surface: surface,
+        background: background,
         error: error,
-        onPrimary: textPrimary,
-        onSecondary: textPrimary,
-        onSurface: textPrimary,
-        onBackground: textPrimary,
-        onError: textPrimary,
+        onPrimary: background,
+        onSecondary: primary,
+        onSurface: primary,
+        onBackground: primary,
       ),
-      
-      // Text theme
+
+      // Text Theme
       textTheme: TextTheme(
-        displayLarge: GoogleFonts.rajdhani(
+        displayLarge: gothicFont.copyWith(
+          fontSize: 48,
+          fontWeight: FontWeight.bold,
+          color: primary,
+          letterSpacing: 2.0,
+        ),
+        displayMedium: gothicFont.copyWith(
           fontSize: 32,
           fontWeight: FontWeight.bold,
-          color: textPrimary,
+          color: primary,
         ),
-        displayMedium: GoogleFonts.rajdhani(
-          fontSize: 28,
-          fontWeight: FontWeight.bold,
-          color: textPrimary,
-        ),
-        displaySmall: GoogleFonts.rajdhani(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          color: textPrimary,
-        ),
-        headlineMedium: GoogleFonts.rajdhani(
+        titleLarge: systemFont.copyWith(
           fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: textPrimary,
-        ),
-        titleLarge: GoogleFonts.rajdhani(
-          fontSize: 18,
           fontWeight: FontWeight.w600,
-          color: textPrimary,
+          color: primary,
+          letterSpacing: 1.2,
         ),
-        bodyLarge: GoogleFonts.inter(
+        bodyLarge: systemFont.copyWith(
           fontSize: 16,
-          color: textPrimary,
+          color: primary,
         ),
-        bodyMedium: GoogleFonts.inter(
+        bodyMedium: systemFont.copyWith(
           fontSize: 14,
-          color: textSecondary,
+          color: mutedForeground,
         ),
-        labelLarge: GoogleFonts.rajdhani(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-          color: textPrimary,
+        labelSmall: systemFont.copyWith(
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1.5,
+          color: mutedForeground,
         ),
       ),
-      
-      // App bar theme
-      appBarTheme: AppBarTheme(
-        backgroundColor: darkBackground,
+
+      // Card Theme
+      cardTheme: CardTheme(
+        color: surface,
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: const BorderSide(color: border, width: 1),
+        ),
+      ),
+
+      // AppBar Theme
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        titleTextStyle: GoogleFonts.rajdhani(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          color: textPrimary,
-        ),
+        scrolledUnderElevation: 0,
       ),
-      
-      // Card theme
-      // Card theme
-      cardTheme: CardThemeData(
-        color: darkPanel,
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: const BorderSide(
-            color: darkPanelBorder,
-            width: 1,
-          ),
-        ),
-      ),
-      // Input decoration theme
-      inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        fillColor: darkPanel,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: darkPanelBorder),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: darkPanelBorder),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: primaryBlue, width: 2),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: error),
-        ),
-        labelStyle: GoogleFonts.inter(color: textSecondary),
-        hintStyle: GoogleFonts.inter(color: textSecondary),
-      ),
-      
-      // Elevated button theme
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: primaryBlue,
-          foregroundColor: textPrimary,
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          textStyle: GoogleFonts.rajdhani(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-      
-      // Progress indicator theme
-      progressIndicatorTheme: const ProgressIndicatorThemeData(
-        color: primaryBlue,
-        linearTrackColor: darkPanelBorder,
+
+      // Icon Theme
+      iconTheme: const IconThemeData(
+        color: primary,
+        size: 24,
       ),
     );
   }

@@ -1,87 +1,101 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 import '../../config/theme.dart';
-import '../../models/user_profile.dart';
-import '../../widgets/common/glow_text.dart';
 
 class SystemHeader extends StatelessWidget {
-  final UserProfile profile;
-
-  const SystemHeader({
-    super.key,
-    required this.profile,
-  });
+  const SystemHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: SoloLevelingTheme.primaryGradient,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: SoloLevelingTheme.glowBlue.withOpacity(0.3),
-            blurRadius: 20,
-            spreadRadius: 2,
-          ),
-        ],
-      ),
+    return Center(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // Navigation Label
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
+              child: Text(
+                '⚔ LVES',
+                style: SoloLevelingTheme.systemFont.copyWith(
+                  color: SoloLevelingTheme.primary,
+                  fontSize: 14,
+                  letterSpacing: 2,
+                ),
+              ),
+            ),
+          ),
+
+          // Main Title
+          Column(
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GlowText(
-                    text: profile.displayName ?? 'Hunter',
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
+              Text(
+                'SYSTEM',
+                style: SoloLevelingTheme.gothicFont.copyWith(
+                  fontSize: 42, // Adjusted for mobile
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 3.0,
+                  color: SoloLevelingTheme.primary,
+                  height: 1.0,
+                ),
+              ),
+              Text(
+                'STATUS',
+                style: SoloLevelingTheme.gothicFont.copyWith(
+                  fontSize: 42,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 3.0,
+                  color: SoloLevelingTheme.primary,
+                  height: 1.0,
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 12),
+
+          // Subtitle
+          Text(
+            'PERSONAL TRAINING INTERFACE',
+            style: SoloLevelingTheme.systemFont.copyWith(
+              fontSize: 12,
+              letterSpacing: 3.0,
+              color: SoloLevelingTheme.mutedForeground,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+          // Decorative Divider
+          const SizedBox(height: 24),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 60,
+                height: 1,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.transparent, SoloLevelingTheme.primary.withOpacity(0.5)],
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    profile.playerClass.toUpperCase(),
-                    style: const TextStyle(
-                      fontSize: 14,
-                      letterSpacing: 2,
-                      color: Colors.white70,
-                    ),
-                  ),
-                ],
+                ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 10,
-                ),
+                width: 8,
+                height: 8,
+                margin: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: Colors.white.withOpacity(0.3),
-                  ),
+                  border: Border.all(color: SoloLevelingTheme.primary.withOpacity(0.5)),
+                  borderRadius: BorderRadius.circular(0), // Diamond shape created by rotation
                 ),
-                child: Column(
-                  children: [
-                    const Text(
-                      'LEVEL',
-                      style: TextStyle(
-                        fontSize: 12,
-                        letterSpacing: 1,
-                        color: Colors.white70,
-                      ),
-                    ),
-                    Text(
-                      '${profile.level}',
-                      style: const TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
+                transform: Matrix4.rotationZ(math.pi / 4),
+              ),
+              Container(
+                width: 60,
+                height: 1,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [SoloLevelingTheme.primary.withOpacity(0.5), Colors.transparent],
+                  ),
                 ),
               ),
             ],

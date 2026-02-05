@@ -1,94 +1,106 @@
 import 'package:flutter/material.dart';
 import '../../config/theme.dart';
-import 'corner_decoration.dart';
 
 class SystemPanel extends StatelessWidget {
   final Widget child;
   final String? title;
-  final EdgeInsetsGeometry? padding;
-  final double? width;
-  final double? height;
-  final bool showCorners;
-  final bool showGlow;
+  final EdgeInsetsGeometry padding;
 
   const SystemPanel({
     super.key,
     required this.child,
     this.title,
-    this.padding,
-    this.width,
-    this.height,
-    this.showCorners = true,
-    this.showGlow = false,
+    this.padding = const EdgeInsets.all(24),
   });
 
   @override
   Widget build(BuildContext context) {
-    Widget panel = Container(
-      width: width,
-      height: height,
+    return Container(
       decoration: BoxDecoration(
-        color: SoloLevelingTheme.darkPanel,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: SoloLevelingTheme.darkPanelBorder,
-          width: 1,
-        ),
-        boxShadow: showGlow
-            ? [
-                BoxShadow(
-                  color: SoloLevelingTheme.glowBlue.withOpacity(0.2),
-                  blurRadius: 20,
-                  spreadRadius: 2,
-                ),
-              ]
-            : null,
+        color: SoloLevelingTheme.surface,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: SoloLevelingTheme.border, width: 1),
       ),
       child: Stack(
         children: [
+          // Content
           Padding(
-            padding: padding ?? const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (title != null) ...[
-                  Text(
-                    title!,
-                    style: SoloLevelingTheme.glowText(20),
-                  ),
-                  const SizedBox(height: 16),
-                ],
-                Flexible(child: child),
-              ],
-            ),
+            padding: padding,
+            child: child,
           ),
-          if (showCorners) ...[
-            const Positioned(
-              top: 0,
-              left: 0,
-              child: CornerDecoration(corner: Corner.topLeft),
-            ),
-            const Positioned(
-              top: 0,
-              right: 0,
-              child: CornerDecoration(corner: Corner.topRight),
-            ),
-            const Positioned(
-              bottom: 0,
-              left: 0,
-              child: CornerDecoration(corner: Corner.bottomLeft),
-            ),
-            const Positioned(
-              bottom: 0,
-              right: 0,
-              child: CornerDecoration(corner: Corner.bottomRight),
-            ),
-          ],
+
+          // Corner Decorations
+          const Positioned(top: 0, left: 0, child: _Corner(isTop: true, isLeft: true)),
+          const Positioned(top: 0, right: 0, child: _Corner(isTop: true, isLeft: false)),
+          const Positioned(bottom: 0, left: 0, child: _Corner(isTop: false, isLeft: true)),
+          const Positioned(bottom: 0, right: 0, child: _Corner(isTop: false, isLeft: false)),
         ],
       ),
     );
-
-    return panel;
   }
+}
+
+class _Corner extends StatelessWidget {
+  final bool isTop;
+  final bool isLeft;
+
+  const _Corner({required this.isTop, required this.isLeft});
+
+  @override
+  Widget build(BuildContext context) {
+    const double size = 8.0;
+    const double thickness = 1.0;
+    const Color color = SoloLevelingTheme.border; // Subtle border color
+
+    return SizedBox(
+      width: size,
+      height: size,
+      child: CustomPaint(
+        painter: _CornerPainter(isTop, isLeft, color, thickness),
+      ),
+    );
+  }
+}
+
+class _CornerPainter extends CustomPainter {
+  final bool isTop;
+  final bool isLeft;
+  final Color color;
+  final double thickness;
+
+  _CornerPainter(this.isTop, this.isLeft, this.color, this.thickness);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = thickness;
+
+    final path = Path();
+
+    // Draw L shapes depending on corner
+    if (isTop && isLeft) {
+      path.moveTo(0, size.height);
+      path.lineTo(0, 0);
+      path.lineTo(size.width, 0);
+    } else if (isTop && !isLeft) {
+      path.moveTo(0, 0);
+      path.lineTo(size.width, 0);
+      path.lineTo(size.width, size.height);
+    } else if (!isTop && isLeft) {
+      path.moveTo(0, 0);
+      path.lineTo(0, size.height);
+      path.lineTo(size.width, size.height);
+    } else { // Bottom Right
+      path.moveTo(size.width, 0);
+      path.lineTo(size.width, size.height);
+      path.lineTo(0, size.height);
+    }
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
