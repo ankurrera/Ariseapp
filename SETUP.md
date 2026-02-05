@@ -237,6 +237,32 @@ flutter install
 
 ## Common Issues and Solutions
 
+### Issue: 400 Bad Request Error
+**Symptom**: Console shows "Failed to load resource: the server responded with a status of 400 ()"
+
+**Root Cause**: Invalid or placeholder Supabase credentials
+
+**Solution**:
+1. The app now validates Supabase configuration at startup
+2. Check the console/debug output for detailed error messages:
+   ```
+   ⚠️ WARNING: Supabase Configuration Error ⚠️
+   Supabase URL is not configured. Please set SUPABASE_URL environment variable...
+   ```
+3. Follow the instructions in the error message to fix the configuration
+4. Make sure you've replaced placeholder values in `lib/config/supabase_config.dart`:
+   - Replace `https://your-project.supabase.co` with your actual Supabase project URL
+   - Replace `your-anon-key` with your actual Supabase anon key
+5. Or run with environment variables:
+   ```bash
+   flutter run --dart-define=SUPABASE_URL=https://your-actual-url.supabase.co --dart-define=SUPABASE_ANON_KEY=your-actual-key
+   ```
+
+**Debug Information**: 
+- All API operations now include detailed logging with emojis for easy identification
+- Look for ✗ (error) and ⚠️ (warning) symbols in the console
+- Each API call logs its start (🔐, 📋, 📝, etc.) and completion (✓) or failure (✗)
+
 ### Issue: Flutter not recognized
 **Solution**: Add Flutter to your system PATH
 ```bash
@@ -265,6 +291,7 @@ flutter doctor --android-licenses
 2. Verify Supabase credentials are correct
 3. Check if your Supabase project is active
 4. Review Supabase dashboard for any issues
+5. Check the debug console for detailed error messages
 
 ## Development Workflow
 
