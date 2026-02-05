@@ -41,7 +41,8 @@ class PlayerStatusPanel extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: SoloLevelingTheme.lightAccent, // Light grey background for pill
+                // FIXED: Changed 'lightAccent' to 'accent'
+                color: SoloLevelingTheme.accent,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
@@ -114,8 +115,8 @@ class PlayerStatusPanel extends StatelessWidget {
               child: LinearProgressIndicator(
                 value: xpProgress,
                 minHeight: 8,
-                // Colors for Light Theme
-                backgroundColor: SoloLevelingTheme.lightBorder,
+                // FIXED: Changed 'lightBorder' to 'border'
+                backgroundColor: SoloLevelingTheme.border,
                 color: colorScheme.primary, // Dark Grey/Black
               ),
             ),
