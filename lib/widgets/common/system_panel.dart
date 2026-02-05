@@ -50,7 +50,7 @@ class _Corner extends StatelessWidget {
   Widget build(BuildContext context) {
     const double size = 8.0;
     const double thickness = 1.0;
-    const Color color = SoloLevelingTheme.border; // Subtle border color
+    const Color color = SoloLevelingTheme.border;
 
     return SizedBox(
       width: size,

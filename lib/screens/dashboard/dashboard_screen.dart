@@ -7,7 +7,6 @@ import '../../widgets/common/corner_decoration.dart';
 import '../../widgets/dashboard/system_header.dart';
 import '../../widgets/dashboard/player_status_panel.dart';
 import '../../widgets/dashboard/radar_chart.dart';
-// Import placeholders
 import '../../widgets/dashboard/skill_points_panel.dart';
 import '../../widgets/dashboard/calendar_panel.dart';
 import '../../widgets/dashboard/goal_panel.dart';
@@ -22,9 +21,10 @@ class DashboardScreen extends ConsumerWidget {
     final userProfileAsync = ref.watch(userProfileProvider);
 
     return Scaffold(
+      backgroundColor: SoloLevelingTheme.background,
       body: Stack(
         children: [
-          // 1. Background Gradient (Top Ellipse)
+          // 1. Subtle Background Decoration (Top Gradient)
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
@@ -32,7 +32,8 @@ class DashboardScreen extends ConsumerWidget {
                   center: Alignment.topCenter,
                   radius: 1.0,
                   colors: [
-                    SoloLevelingTheme.primary.withOpacity(0.05),
+                    // Very subtle warm tint for light mode
+                    SoloLevelingTheme.primary.withOpacity(0.03),
                     SoloLevelingTheme.background,
                   ],
                   stops: const [0.0, 0.6],
@@ -41,7 +42,7 @@ class DashboardScreen extends ConsumerWidget {
             ),
           ),
 
-          // 2. Corner Decorations (Screen Edges)
+          // 2. Corner Decorations
           const Positioned(top: 16, left: 16, child: CornerDecoration(corner: Corner.topLeft)),
           const Positioned(top: 16, right: 16, child: CornerDecoration(corner: Corner.topRight)),
           const Positioned(bottom: 16, left: 16, child: CornerDecoration(corner: Corner.bottomLeft)),
@@ -53,7 +54,7 @@ class DashboardScreen extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
               child: Column(
                 children: [
-                  // Top Actions Row
+                  // Top Actions
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -61,11 +62,7 @@ class DashboardScreen extends ConsumerWidget {
                       const SizedBox(width: 8),
                       _TopIconButton(icon: Icons.settings, onTap: () => context.push('/profile')),
                       const SizedBox(width: 8),
-                      _TopIconButton(icon: Icons.menu, onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Menu feature coming soon")),
-                        );
-                      }),
+                      _TopIconButton(icon: Icons.logout, onTap: () => ref.read(authNotifierProvider.notifier).signOut()),
                     ],
                   ),
 
@@ -87,9 +84,7 @@ class DashboardScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 32),
 
-                  // Main Grid (Responsive)
-                  // On Mobile: Vertical Column
-                  // On Tablet/Web: Grid logic would go here (using LayoutBuilder)
+                  // Main Grid
                   userProfileAsync.when(
                     data: (profile) => Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -171,7 +166,7 @@ class _FooterDecoration extends StatelessWidget {
           width: 8,
           height: 8,
           margin: const EdgeInsets.symmetric(horizontal: 16),
-          transform: Matrix4.rotationZ(0.785398), // 45 degrees
+          transform: Matrix4.rotationZ(0.785398),
           decoration: BoxDecoration(
             border: Border.all(color: SoloLevelingTheme.primary.withOpacity(0.5)),
           ),

@@ -62,6 +62,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Access dynamic theme values if needed, or use static consts from Theme
     return Scaffold(
       backgroundColor: SoloLevelingTheme.background,
       body: SafeArea(
@@ -108,6 +109,12 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                               labelText: 'Email',
                               prefixIcon: Icon(Icons.email, color: SoloLevelingTheme.mutedForeground),
                               labelStyle: TextStyle(color: SoloLevelingTheme.mutedForeground),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: SoloLevelingTheme.border),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: SoloLevelingTheme.primary),
+                              ),
                             ),
                             keyboardType: TextInputType.emailAddress,
                             validator: (value) {
@@ -128,6 +135,12 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                               labelText: 'Password',
                               prefixIcon: Icon(Icons.lock, color: SoloLevelingTheme.mutedForeground),
                               labelStyle: TextStyle(color: SoloLevelingTheme.mutedForeground),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: SoloLevelingTheme.border),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: SoloLevelingTheme.primary),
+                              ),
                             ),
                             obscureText: true,
                             validator: (value) {
@@ -168,6 +181,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 2,
+                                color: SoloLevelingTheme.background, // Contrast text
                               ),
                             ),
                           ),
