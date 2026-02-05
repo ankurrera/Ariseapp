@@ -9,12 +9,16 @@ class AriseApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
-    
+
     return MaterialApp.router(
-      title: 'Arise - Solo Leveling',
-      theme: SoloLevelingTheme.darkTheme,
-      routerConfig: router,
+      title: 'Arise',
       debugShowCheckedModeBanner: false,
+
+      // Set default theme to LIGHT to match the white pictures
+      theme: SoloLevelingTheme.lightTheme,
+      themeMode: ThemeMode.light, // Forces light mode
+
+      routerConfig: router,
     );
   }
 }

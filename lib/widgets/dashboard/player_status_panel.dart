@@ -9,12 +9,17 @@ class PlayerStatusPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Logic from React
+    // Access current theme colors
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+
+    // Logic
     const int xpForNextLevel = 1000;
     final double xpProgress = (profile.currentXp / xpForNextLevel).clamp(0.0, 1.0);
-    const int coins = 225; // Placeholder
+    const int coins = 225;
 
-    // Stats Defaults (Matching React fallback)
+    // Stats
     final stats = profile.stats.isEmpty ? {
       'strength': 30,
       'endurance': 25,
@@ -26,6 +31,7 @@ class PlayerStatusPanel extends StatelessWidget {
     final int filledHearts = ((healthPercent / 100) * 5).round();
 
     return Card(
+      // Card style comes from Theme (lightCard + lightBorder)
       child: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -35,34 +41,44 @@ class PlayerStatusPanel extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: SoloLevelingTheme.muted,
+                color: SoloLevelingTheme.lightAccent, // Light grey background for pill
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.person, size: 12, color: SoloLevelingTheme.mutedForeground),
+                  Icon(Icons.person, size: 12, color: colorScheme.onSurface.withOpacity(0.6)),
                   const SizedBox(width: 6),
-                  Text("Profile", style: SoloLevelingTheme.systemFont.copyWith(fontSize: 12, color: SoloLevelingTheme.mutedForeground)),
+                  Text(
+                      "Profile",
+                      style: SoloLevelingTheme.systemFont.copyWith(
+                          fontSize: 12,
+                          color: colorScheme.onSurface.withOpacity(0.6)
+                      )
+                  ),
                 ],
               ),
             ),
             const SizedBox(height: 16),
 
-            // 2. Hero Image Area
+            // 2. Hero Image Area (Gradient)
             Container(
-              height: 100, // Aspect Ratio approx 2/1 relative to width
+              height: 100,
               width: double.infinity,
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [SoloLevelingTheme.muted, SoloLevelingTheme.accent],
+                  // Gradient colors for Hero card background (Subtle grey to slightly darker grey)
+                  colors: [
+                    Color(0xFFF5F5F5), // Very light grey
+                    Color(0xFFE0E0E0), // Slightly darker
+                  ],
                 ),
                 borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
               ),
-              child: const Center(
-                child: Icon(Icons.shield, size: 48, color: Colors.white12),
+              child: Center(
+                child: Icon(Icons.shield, size: 48, color: colorScheme.onSurface.withOpacity(0.2)),
               ),
             ),
             const SizedBox(height: 24),
@@ -87,7 +103,7 @@ class PlayerStatusPanel extends StatelessWidget {
             // 5. Progress Bar
             Row(
               children: [
-                Text("Level Up", style: SoloLevelingTheme.systemFont.copyWith(fontSize: 14, color: SoloLevelingTheme.mutedForeground)),
+                Text("Level Up", style: textTheme.bodyMedium),
                 const SizedBox(width: 8),
                 const Text("🚀", style: TextStyle(fontSize: 14)),
               ],
@@ -98,21 +114,22 @@ class PlayerStatusPanel extends StatelessWidget {
               child: LinearProgressIndicator(
                 value: xpProgress,
                 minHeight: 8,
-                backgroundColor: SoloLevelingTheme.border,
-                color: SoloLevelingTheme.primary,
+                // Colors for Light Theme
+                backgroundColor: SoloLevelingTheme.lightBorder,
+                color: colorScheme.primary, // Dark Grey/Black
               ),
             ),
             const SizedBox(height: 6),
             Text(
               "${profile.currentXp} / $xpForNextLevel",
-              style: SoloLevelingTheme.systemFont.copyWith(fontSize: 12, color: SoloLevelingTheme.mutedForeground),
+              style: textTheme.labelSmall,
             ),
             const SizedBox(height: 24),
 
             // 6. Health Section
             Row(
               children: [
-                Text("Health", style: SoloLevelingTheme.systemFont.copyWith(fontSize: 14, color: SoloLevelingTheme.mutedForeground)),
+                Text("Health", style: textTheme.bodyMedium),
                 const SizedBox(width: 8),
                 const Text("❤️", style: TextStyle(fontSize: 14)),
               ],
@@ -125,18 +142,18 @@ class PlayerStatusPanel extends StatelessWidget {
                   child: Icon(
                     Icons.favorite,
                     size: 20,
+                    // Filled hearts match primary color (Dark Grey/Black), empty are transparent grey
                     color: index < filledHearts
-                        ? SoloLevelingTheme.primary
-                        : SoloLevelingTheme.mutedForeground.withOpacity(0.3),
+                        ? colorScheme.primary
+                        : colorScheme.onSurface.withOpacity(0.2),
                   ),
                 )),
               ],
             ),
             const SizedBox(height: 4),
-            // FIXED: Used Theme.of(context) instead of SoloLevelingTheme.bodyLarge
             Text(
               "$healthPercent%",
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+              style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -154,7 +171,10 @@ class _InfoItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(label, style: SoloLevelingTheme.systemFont.copyWith(fontWeight: FontWeight.w500, color: SoloLevelingTheme.primary)),
+        Text(
+            label,
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500)
+        ),
         const SizedBox(width: 4),
         Text(icon, style: const TextStyle(fontSize: 14)),
       ],
@@ -169,12 +189,13 @@ class _StatRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: SoloLevelingTheme.systemFont.copyWith(fontSize: 12, color: SoloLevelingTheme.mutedForeground)),
+        Text(label, style: textTheme.labelSmall),
         const SizedBox(height: 2),
-        Text(value, style: SoloLevelingTheme.systemFont.copyWith(fontSize: 14, color: SoloLevelingTheme.primary)),
+        Text(value, style: textTheme.bodyLarge),
       ],
     );
   }
